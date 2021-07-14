@@ -1,9 +1,35 @@
 //Font
 p {
     font-family: "Prompt", sans-serif;
+    margin-bottom: 0;
     &.primary_paragraph {
         color: $primary-color;
     }
+}
+
+//Form
+.form-control {
+    font-family: "Prompt", sans-serif;
+    color: $secondary-color;
+    &::placeholder {
+        color: $muted;
+    }
+}
+
+//Button
+.btn {
+    border-color: unset;
+    font-family: "Prompt", sans-serif;
+    font-weight: 500;
+    width: 100%;
+    &.btn-primary {
+        background-color: $primary-color;
+    }
+}
+
+//Row
+.row {
+    margin-bottom: 1em;
 }
 
 @import "bootstrap/dist/css/bootstrap.min.css";

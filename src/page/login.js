@@ -1,30 +1,19 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import "./login.scss"
+import InputField from '../components'
 
 export default class Login extends Component {
     render() {
+        const params = [
+            { label: 'รหัสประจำตัวนักเรียน/เจ้าหน้าที่', placeholder: 'รหัสประจำตัว' },
+        ]
         return (
             <div>
                 <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label><p className="primary_paragraph">รหัสประจำตัวนักเรียน/เจ้าหน้าที่</p></Form.Label>
-                        <Form.Control type="email" placeholder="รหัสประจำตัว" />
-                        <Form.Text className="text-muted">
-                            We
-                        </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Check me out" />
-                    </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+                    <Row><Col><InputField label='รหัสประจำตัวนักเรียน/เจ้าหน้าที่' placeholder='รหัสประจำตัว' /></Col></Row>
+                    <Row><Col><InputField label='รหัสผ่าน' placeholder='รหัสผ่าน' /></Col></Row>
+                    <Row><Col xs={12}><Button variant="primary" type="submit">เข้าสู่ระบบ</Button></Col></Row>
                 </Form>
             </div>
         )
