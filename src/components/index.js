@@ -1,3 +1,4 @@
 import InputField from "./inputField";
+import BoxContainer from "./boxContainer";
 
-export default InputField
+export { InputField, BoxContainer }

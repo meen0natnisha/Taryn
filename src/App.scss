@@ -17,22 +17,46 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.Box-container {
+  margin-left: -2em;
+  margin-bottom: 1em;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+  &.unapp {
+    background: $primary-color;
+    p,
+    strong {
+      color: white;
+    }
+  }
+  &.app {
+    border: 1px solid $primary-color;
+    strong {
+      color: $primary-color;
+    }
+    p {
+      color: $secondary-color;
+      text-decoration: underline;
+    }
+  }
+}
+
+ion-icon {
+  &#icon-btn {
+    font-size: 2em;
+    padding: 10px;
+    border: 1px solid $primary-color;
+    border-radius: 10px;
+    color: $secondary-color;
+    margin-bottom: 0.5em;
   }
 }

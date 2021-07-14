@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Row, Col, Form, Button } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 
 export default class InputField extends Component {
     render() {
         let { type, label, placeholder } = this.props
-        console.log("label ", label)
+
         switch (type) {
             case "date":
                 return (
