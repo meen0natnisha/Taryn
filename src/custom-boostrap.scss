@@ -1,0 +1,9 @@
+//Font
+p {
+    font-family: "Prompt", sans-serif;
+    &.primary_paragraph {
+        color: $primary-color;
+    }
+}
+
+@import "bootstrap/dist/css/bootstrap.min.css";
