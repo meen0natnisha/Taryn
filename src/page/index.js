@@ -1,4 +1,5 @@
 import Login from "./login";
 import Dashboard from "./dashboard";
-
-export { Login, Dashboard };
+import Profile from "./profile";
+import Teacherprofile from './teacherprofile';
+export { Login, Dashboard, Profile, Teacherprofile };

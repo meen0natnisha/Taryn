@@ -3,6 +3,9 @@ import { Button } from 'react-bootstrap'
 import { BoxContainer } from '../components'
 
 export default class Dashboard extends Component {
+    onProfileIcon = () => {
+        window.location.assign('/Profile')
+    }
     render() {
         const unapprovedArr = [
             { title: "วิชา 340000", status: "สถานะ: รอครูประจำวิชาอนุมัติ" },
@@ -13,7 +16,8 @@ export default class Dashboard extends Component {
         ]
         return (
             <div>
-                <ion-icon name="person" id="icon-btn"></ion-icon>
+                <div onClick={()=> this.onProfileIcon()}>
+                <ion-icon name="person" id="icon-btn" ></ion-icon></div>
                 <h3 className="primary_paragraph">คำขอที่ยังไม่อนุมัติ</h3>
                 {unapprovedArr.map((list, i) => (
                     <BoxContainer title={list.title} status={list.status} style="unapproved" />
@@ -25,6 +29,7 @@ export default class Dashboard extends Component {
                 ))}
 
                 <Button variant="primary" >+ เพิ่ม</Button>
+                
             </div>
         )
     }
