@@ -6,6 +6,11 @@ export default class Dashboard extends Component {
     onProfileIcon = () => {
         window.location.assign('/Profile')
     }
+
+    onAdd = () => {
+        window.location.assign(`/add`)
+    }
+
     render() {
         const unapprovedArr = [
             { title: "วิชา 340000", status: "สถานะ: รอครูประจำวิชาอนุมัติ" },
@@ -28,8 +33,7 @@ export default class Dashboard extends Component {
                     <BoxContainer title={list.title} status={list.status} style="approved" />
                 ))}
 
-                <Button variant="primary" >+ เพิ่ม</Button>
-                
+                <Button variant="primary" onClick={() => this.onAdd()} >+ เพิ่มใบลา</Button>
             </div>
         )
     }
