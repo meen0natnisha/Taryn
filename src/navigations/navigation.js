@@ -5,7 +5,7 @@ import "./navigation.scss"
 //Route
 import PrivateRoute from './routes/private-route';
 //Page
-import { Login, Dashboard, Profile, Teacherprofile, Add} from '../page';
+import { Login, Dashboard, Profile, Teacherprofile, Add, Teacherdashboard} from '../page';
 
 export default class NavigationRouter extends Component {
   constructor(props) {
@@ -37,6 +37,8 @@ export default class NavigationRouter extends Component {
                 <PrivateRoute component={Profile} path={`/profile`} authed={authen} exact />
                 <PrivateRoute component={Teacherprofile} path={`/Teacherprofile`} authed={authen} exact />
                 <PrivateRoute component={Add} path={`/add`} authed={authen} exact />
+                <PrivateRoute component={Teacherdashboard} path={`/teacherdashboard`} authed={authen} exact />
+                
                 {/* --------- another ------------ */}
                 <Route path='/' component={Login} />
               </Switch>
