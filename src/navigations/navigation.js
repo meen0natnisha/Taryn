@@ -5,7 +5,9 @@ import "./navigation.scss"
 //Route
 import PrivateRoute from './routes/private-route';
 //Page
-import { Login, Dashboard, Profile, Teacherprofile, Add, Teacherdashboard} from '../page';
+import { Login, Dashboard, Profile, Add, ConfrimToSubmit } from '../page';
+//api
+import { POST, GET } from '../api'
 
 export default class NavigationRouter extends Component {
   constructor(props) {
@@ -13,11 +15,20 @@ export default class NavigationRouter extends Component {
     this.state = {
       loading: false,
       authen: true,
-      role: 'stident',
+      role: 't1',
     }
   }
   render() {
     let { loading, role, authen } = this.state
+
+    const onLogin = async() => {
+      try {
+        await POST("/authen/login", { user_no: '001', id_card: '1349900820377'})
+      } catch(err) {
+        console.log(err)
+      }
+    }
+
     if (loading) {
       return <div><p>Loading</p></div>
     } else {
@@ -34,10 +45,9 @@ export default class NavigationRouter extends Component {
                   exact
                 />
                 <PrivateRoute component={Dashboard} path={`/dashboard`} authed={authen} exact />
-                <PrivateRoute component={Profile} path={`/profile`} authed={authen} exact />
-                <PrivateRoute component={Teacherprofile} path={`/Teacherprofile`} authed={authen} exact />
+                <PrivateRoute component={Profile} path={`/profile/role`} authed={authen} exact />
                 <PrivateRoute component={Add} path={`/add`} authed={authen} exact />
-                <PrivateRoute component={Teacherdashboard} path={`/teacherdashboard`} authed={authen} exact />
+                <PrivateRoute component={ConfrimToSubmit} path={`/confirm`} authed={authen} exact />
                 
                 {/* --------- another ------------ */}
                 <Route path='/' component={Login} />

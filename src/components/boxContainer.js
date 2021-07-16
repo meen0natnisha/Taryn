@@ -1,15 +1,29 @@
 import React, { Component } from 'react'
+import { Button } from 'react-bootstrap'
 
 export default class BoxContainer extends Component {
     render() {
-        let { title, status, style } = this.props
-        return (
-            <div className={style === "unapproved" ? "Box-container unapp": "Box-container app"} >
-                <div className="p-4">
-                    <strong>{title}</strong>
-                    <p>{status}</p>
+        let { type, title, status, style } = this.props
+        switch (type) {
+            case "teacher":
+                return (
+                    <div className={style === "unapproved" ? "Box-container unapp" : "Box-container app"} >
+                    <div className="p-4">
+                        <strong>{title}</strong>
+                        <p>{status}</p>
+                        <Button>sssss</Button>
+                    </div>
                 </div>
-            </div>
-        )
+                )
+            default:
+                return (
+                    <div className={style === "unapproved" ? "Box-container unapp" : "Box-container app"} >
+                        <div className="p-4">
+                            <strong>{title}</strong>
+                            <p>{status}</p>
+                        </div>
+                    </div>
+                )
+        }
     }
 }

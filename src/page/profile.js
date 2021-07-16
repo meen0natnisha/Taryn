@@ -3,6 +3,11 @@ import { Row, Col, Form, Button } from 'react-bootstrap'
 import { InputField } from '../components'
 
 export default class Profile extends Component {
+
+    componentDidMount = () => {
+        console.log(window.location)
+    }
+
     render() {
         return (
             <div>

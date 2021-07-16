@@ -33,9 +33,11 @@
   border-top-right-radius: 10px;
   &.unapp {
     background: $primary-color;
-    p,
     strong {
       color: white;
+    }
+    p {
+      color: $secondary-color;
     }
   }
   &.app {
