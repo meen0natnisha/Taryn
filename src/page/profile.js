@@ -71,7 +71,7 @@ export default class Profile extends Component {
             return (
                 <>
                     <Form>
-                        <Row><Col><InputField label='ตำแหน่ง' placeholder='คุณครูประจำวิชา' value={profile?.role_id} disabled={true} /></Col></Row>
+                        <Row><Col><InputField label='ตำแหน่ง' placeholder='คุณครูประจำวิชา' value={profile?.role_name} disabled={true} /></Col></Row>
                         <Row><Col><InputField label='คำนำหน้า' placeholder='นาย/นาง/นางสาว' value={profile?.prefix} disabled={true} /></Col></Row>
                         <Row><Col><InputField label='ชื่อ-นามสกุล' placeholder='ชื่อ-นามสกุล' value={profile?.name} disabled={true} /></Col></Row>
                     </Form>
