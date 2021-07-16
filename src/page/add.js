@@ -10,6 +10,7 @@ export default class Add extends Component {
         this.state = {
             leave: {},
             role_id: "",
+            profile: "",
             validated: false,
             date_start: "",
             date_end: ""
@@ -17,15 +18,16 @@ export default class Add extends Component {
     }
 
     componentDidMount = () => {
-        let { role_id } = this.state
+        let { role_id, profile } = this.state
         if (this.props.location.state) {
             role_id = this.props.location.state.role_id
+            profile = this.props.location.state.profile
         }
-        this.setState({ role_id })
+        this.setState({ role_id, profile })
     }
     render() {
         let { userSigPad, parentSigPad, appSigPad } = {}
-        let { leave, role_id, validated, date_start, date_end } = this.state
+        let { leave, role_id, profile, validated, date_start, date_end } = this.state
 
         const onChangeInput = ({ target: { name, value } }) => {
             let { leave } = this.state
@@ -68,7 +70,9 @@ export default class Add extends Component {
                 this.setState({ validated: true })
                 console.log("Add ", leave)
                 this.props.history.push({
-                    pathname: '/confirm'
+                    pathname: '/confirm',
+                    state: { role_id: role_id, profile: profile },
+
                 })
             } else {
                 swal({
@@ -85,7 +89,8 @@ export default class Add extends Component {
                 this.setState({ validated: true })
                 console.log("Add ", leave)
                 this.props.history.push({
-                    pathname: '/confirm'
+                    pathname: '/confirm',
+                    state: { role_id: role_id, profile: profile }
                 })
             }
         }

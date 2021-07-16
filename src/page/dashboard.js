@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { BoxContainer } from '../components'
+import { GET, POST } from '../api'
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -17,9 +18,23 @@ export default class Dashboard extends Component {
             ]
         }
     }
+    fetchData = async() => {
+        try {
+            let res = await POST('/leave/to_app', {role_id: 1})
+            console.log(res)
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    componentDidMount = () => {
+        this.fetchData()
+    }
 
     render() {
         let { role_id, profile, unapprovedArr, approvedArr } = this.state
+        console.log(this.props.location.state.role_id)
+
         const onProfileIcon = () => {
             this.props.history.push({
                 pathname: '/profile',
@@ -30,7 +45,7 @@ export default class Dashboard extends Component {
         const onAdd = () => {
             this.props.history.push({
                 pathname: '/add',
-                state: { role_id: role_id }
+                state: { role_id: role_id, profile: profile }
             })
         }
 

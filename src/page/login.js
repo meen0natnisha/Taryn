@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
-import "./login.scss"
 import { InputField } from '../components'
 import { POST } from '../api'
 import swal from 'sweetalert';
@@ -18,7 +17,7 @@ export default class Login extends Component {
         const onLogin = async () => {
             try {
                 let res = await POST("/authen/login", { user_no: user_no, id_card: id_card })
-                console.log("res", res)
+                localStorage.setItem("token", res.cf1)
                 this.props.history.push({
                     pathname: '/dashboard',
                     state: { role_id: res.role_id, profile: res }

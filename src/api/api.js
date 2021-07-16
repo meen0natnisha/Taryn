@@ -7,29 +7,35 @@ function response(json) {
     : Promise.reject(json.message);
 }
 
-export const POST = (path, obj, formData) =>
-  fetch(ip + path, {
-    method: 'POST',
-    headers: formData
-      ? {}
-      : {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-    body: formData ? obj : JSON.stringify(obj),
-    credentials: 'include',
+export const POST = (path, obj, formData) => {
+  let token = localStorage.getItem("token");
+  return fetch(ip + path, {
+       method: "POST",
+       headers: formData
+            ? { token }
+            : {
+                   Accept: "application/json",
+                   "Content-Type": "application/json",
+                   token,
+              },
+       body: formData ? obj : JSON.stringify(obj),
+       credentials: "include",
   })
-    .then((res) => res.json())
-    .then(response);
+       .then((res) => res.json())
+       .then(response);
+};
 
-export const GET = (path) =>
-  fetch(ip + path, {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
+export const GET = (path) => {
+  let token = localStorage.getItem("token");
+  return fetch(ip + path, {
+       method: "GET",
+       headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token,
+       },
+       credentials: "include",
   })
-    .then((res) => res.json())
-    .then(response);
+       .then((res) => res.json())
+       .then(response);
+};
