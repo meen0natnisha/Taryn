@@ -3,6 +3,7 @@ import { InputField } from '../components'
 import { Col, Row, Button, Form } from 'react-bootstrap'
 import moment from 'moment-timezone'
 import swal from 'sweetalert';
+import { POST } from '../api';
 
 export default class Add extends Component {
     constructor(props) {
@@ -13,18 +14,23 @@ export default class Add extends Component {
             profile: "",
             validated: false,
             date_start: "",
-            date_end: ""
+            date_end: "",
         }
     }
 
     componentDidMount = () => {
-        let { role_id, profile } = this.state
+        let { role_id, profile, leave } = this.state
         if (this.props.location.state) {
             role_id = this.props.location.state.role_id
             profile = this.props.location.state.profile
+            if (role_id != 7) {
+                leave["leave_id"] = this.props.location.state.leave_id
+                this.setState({ leave })
+            }
         }
         this.setState({ role_id, profile })
     }
+
     render() {
         let { userSigPad, parentSigPad, appSigPad } = {}
         let { leave, role_id, profile, validated, date_start, date_end } = this.state
@@ -52,9 +58,10 @@ export default class Add extends Component {
 
         const onSign = () => {
             if (role_id !== 7) {
-                leave["appSigPad"] = appSigPad.getTrimmedCanvas().toDataURL()
+                leave["sign"] = appSigPad.getTrimmedCanvas().toDataURL()
+                leave["date"] = moment(Date()).format("yyyy-MM-DD")
             } else {
-                leave["user_sign"] = userSigPad.getTrimmedCanvas().toDataURL()
+                leave["student_sign"] = userSigPad.getTrimmedCanvas().toDataURL()
                 leave["parent_sign"] = parentSigPad.getTrimmedCanvas().toDataURL()
             }
             this.setState({ leave })
@@ -64,15 +71,34 @@ export default class Add extends Component {
             this.props.history.goBack()
         }
 
+        const onPostLeave = async () => {
+            try {
+                let leave_id = await POST('/leave/add', leave)
+                leave["leave_id"] = leave_id
+                this.setState({
+                    leave
+                })
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        const onPostApproved = async () => {
+            try {
+                await POST('/leave/sign', leave)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
         const handleStudentSubmit = () => {
             if (leave.class_code && userSigPad && parentSigPad) {
                 onSign()
+                onPostLeave()
                 this.setState({ validated: true })
-                console.log("Add ", leave)
                 this.props.history.push({
                     pathname: '/confirm',
-                    state: { role_id: role_id, profile: profile },
-
+                    state: { role_id: role_id, leave_id: leave },
                 })
             } else {
                 swal({
@@ -86,11 +112,11 @@ export default class Add extends Component {
         const handleApproved = () => {
             if (appSigPad) {
                 onSign()
+                onPostApproved()
                 this.setState({ validated: true })
-                console.log("Add ", leave)
                 this.props.history.push({
                     pathname: '/confirm',
-                    state: { role_id: role_id, profile: profile }
+                    state: { role_id: role_id }
                 })
             }
         }
@@ -122,18 +148,17 @@ export default class Add extends Component {
                     <h3 className="primary_paragraph">จัดการใบลา</h3>
                     <Form validated={validated} >
                         <Row><Col><InputField type='textarea' label='เหตุผล' placeholder='กรอกเหตุผล' name='note' value={leave.note} onChange={(value) => onChangeInputArea("note", value)} /></Col></Row>
-                        <Row><Col><InputField type='date' label='วันที่ดำเนินการ' name='date_start' value={moment(Date()).format("DD/MM/yyyy")} disabled={true} /></Col></Row>
-                        <Row><Col><InputField type='sign' label='ลายเซ็นนักเรียน' onChange={(ref) => { appSigPad = ref }} /></Col></Row>
+                        <Row><Col><InputField type='date' label='วันที่ดำเนินการ' name='date' value={moment(Date()).format("DD-MM-yyyy")} disabled={true} /></Col></Row>
+                        <Row><Col><InputField type='sign' label='ลายเซ็น' onChange={(ref) => { appSigPad = ref }} /></Col></Row>
                         <Row><Col xs={12}><Button variant="primary" onClick={() => handleApproved()}>เพิ่มใบลา</Button></Col></Row>
                     </Form>
                 </>
             )
         }
-
         return (
             <div>
                 <div onClick={() => onGoBack()}><ion-icon name="chevron-back-outline" id="icon-btn"></ion-icon></div>
-                {role_id === "1"
+                {role_id === 7
                     ? renderAdd()
                     : renderApproved()
                 }

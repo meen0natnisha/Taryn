@@ -10,28 +10,29 @@ export default class ConfrimToSubmit extends Component {
             leave: {},
             role_id: "",
             profile: "",
+            leave_id: ""
         }
     }
 
     componentDidMount = () => {
-        let { role_id, profile } = this.state
+        let { role_id, profile, leave_id } = this.state
         if (this.props.location.state) {
             role_id = this.props.location.state.role_id
             profile = this.props.location.state.profile
+            leave_id = this.props.location.state.leave_id
         }
-        this.setState({ role_id, profile })
+        this.setState({ role_id, profile, leave_id })
     }
 
     render() {
-        let { leave, role_id, profile } = this.state
-
+        let { leave_id, role_id, profile } = this.state
         const onGoBack = () => {
             this.props.history.goBack()
         }
 
         const onOpenPDF = async () => {
             await axios.post(`${ip}/leave/create_pdf`,
-                { leave_id: 1 },
+                { leave_id: leave_id.leave_id },
                 {
                     responseType: "blob",
                     headers: {

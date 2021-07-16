@@ -9,26 +9,33 @@ export default class Dashboard extends Component {
         this.state = {
             role_id: this.props.location.state.role_id,
             profile: this.props.location.state.profile,
-            unapprovedArr: [
-                { title: "วิชา 340000", status: "สถานะ: รอครูประจำวิชาอนุมัติ" },
-                { title: "วิชา 341000", status: "สถานะ: รอครูประจำวิชาอนุมัติ" },
-            ],
-            approvedArr: [
-                { id: 0, title: "วิชา 110000", status: "ดาวน์โหลดเอกสารใบลา" },
-            ],
+            unapprovedArr: [],
+            approvedArr: [],
         }
     }
-    fetchData = async() => {
+    fetchData = async () => {
+        let unApp 
         try {
-            let res = await POST('/leave/to_app')
-            console.log(res)
-        } catch(err) {
+            if (this.state.role_id != 7) {
+                let data = await POST('/leave/to_app')
+                unApp = data
+            } else {
+                let res = await GET('/leave/my')
+                let data = res.filter((e) => e.status === "รออนุมัติ")
+                unApp = data
+            }
+            console.log(unApp)
+            this.setState({
+                unapprovedArr: unApp
+            })
+        } catch (err) {
             console.log(err)
         }
     }
 
     componentDidMount = () => {
         this.fetchData()
+
     }
 
     render() {
@@ -48,18 +55,29 @@ export default class Dashboard extends Component {
             })
         }
 
+        const onApprove = (id) => {
+            this.props.history.push({
+                pathname: '/add',
+                state: { role_id: role_id, leave_id: id }
+            })
+        }
+
         const renderStudentField = () => {
             return (
                 <>
                     <h3 className="primary_paragraph">คำขอที่ยังไม่อนุมัติ</h3>
-                    {unapprovedArr.map((list, i) => (
-                        <BoxContainer key={i} title={list.title} status={list.status} style="unapproved" />
-                    ))}
+                    {unapprovedArr.length != 0 ?
+                        unapprovedArr.map((list, i) => (
+                            <BoxContainer key={i} title={`วิชา${list.class_code}`} status={list.status} style="unapproved" />
+                        ))
+                        : <p className="secondary_paragraph">ไม่พบคำร้อง</p>}
 
                     <h3 className="primary_paragraph">คำขอที่อนุมัติสำเร็จ</h3>
-                    {approvedArr.map((list, i) => (
-                        <BoxContainer key={i} title={list.title} status={list.status} style="approved" />
-                    ))}
+                    {approvedArr.length != 0 ?
+                        approvedArr.map((list, i) => (
+                            <BoxContainer key={i} title={list.title} status={list.status} style="approved" />
+                        ))
+                        : <p className="secondary_paragraph">ไม่พบคำร้อง</p>}
 
                     <Button variant="primary" onClick={() => onAdd()} >+ เพิ่มใบลา</Button>
                 </>
@@ -71,13 +89,13 @@ export default class Dashboard extends Component {
                 <>
                     <h3 className="primary_paragraph">คำขอที่ยังไม่อนุมัติ</h3>
                     {unapprovedArr.map((list, i) => (
-                        <BoxContainer key={i} type='teacher' title={list.title} status={list.status} style="unapproved" onClick={() => onAdd()} />
+                        <BoxContainer key={i} type='teacher' title={`วิชา${list.class_code}`} status={list.status} style="unapproved" onClick={() => onApprove(list.leave_id) } />
                     ))}
 
-                    <h3 className="primary_paragraph">คำขอที่อนุมัติสำเร็จ</h3>
+                    {/* <h3 className="primary_paragraph">คำขอที่อนุมัติสำเร็จ</h3>
                     {approvedArr.map((list, i) => (
                         <BoxContainer key={i} type='teacher' title={list.title} status={list.status} style="approved" />
-                    ))}
+                    ))} */}
                 </>
             )
         }

@@ -6,6 +6,9 @@ h3 {
     &.primary_paragraph {
         color: $primary-color;
     }
+    &.secondary_paragraph {
+        color: $secondary-color
+    }
 }
 
 p {
