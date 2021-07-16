@@ -40,7 +40,8 @@ export default class Login extends Component {
 
         return (
             <div>
-                <Form>
+                <Form> 
+                    <Row><Col xs={6} md={4}><Image src="../../public/ms-icon-310x310.png" rounded /></Col></Row>
                     <Row><Col><InputField label='รหัสประจำตัวนักเรียน/เจ้าหน้าที่' placeholder='รหัสประจำตัว' name='user_no' value={user_no} onChange={onChangeInput} /></Col></Row>
                     <Row><Col><InputField label='รหัสผ่าน' textInputType='password' placeholder='รหัสผ่าน' name='id_card' value={id_card} onChange={onChangeInput} /></Col></Row>
                     <Row><Col xs={12}><Button variant="primary" onClick={() => onLogin()}>เข้าสู่ระบบ</Button></Col></Row>
