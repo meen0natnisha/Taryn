@@ -3,24 +3,30 @@ import { Button } from 'react-bootstrap'
 
 export default class BoxContainer extends Component {
     render() {
-        let { type, title, status, style, onClick} = this.props
+        let { type, title, status, style, onClick } = this.props
         switch (type) {
             case "teacher":
                 return (
                     <div className={style === "unapproved" ? "Box-container unapp" : "Box-container app"} >
-                    <div className="p-4">
-                        <strong>{title}</strong>
-                        <p>{status}</p>
-                        { style === "unapproved" && <Button variant='warning' onClick={onClick}>จัดการใบลา</Button>}
+                        <div className="p-4">
+                            <strong>{title}</strong>
+                            {style === "approved"
+                                ? <p onClick={() => console.log("pdf")}>ดาวน์โหลดเอกสารใบลา</p>
+                                : <p>{status}</p>
+                            }
+                            {style === "unapproved" && <Button variant='warning' onClick={onClick}>จัดการใบลา</Button>}
+                        </div>
                     </div>
-                </div>
                 )
             default:
                 return (
                     <div className={style === "unapproved" ? "Box-container unapp" : "Box-container app"} >
                         <div className="p-4">
                             <strong>{title}</strong>
-                            <p>{status}</p>
+                            {style === "approved"
+                                ? <p onClick={() => console.log("pdf")}>ดาวน์โหลดเอกสารใบลา</p>
+                                : <p>{status}</p>
+                            }
                         </div>
                     </div>
                 )

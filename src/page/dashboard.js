@@ -15,12 +15,12 @@ export default class Dashboard extends Component {
             ],
             approvedArr: [
                 { id: 0, title: "วิชา 110000", status: "ดาวน์โหลดเอกสารใบลา" },
-            ]
+            ],
         }
     }
     fetchData = async() => {
         try {
-            let res = await POST('/leave/to_app', {role_id: 1})
+            let res = await POST('/leave/to_app')
             console.log(res)
         } catch(err) {
             console.log(err)
@@ -33,7 +33,6 @@ export default class Dashboard extends Component {
 
     render() {
         let { role_id, profile, unapprovedArr, approvedArr } = this.state
-        console.log(this.props.location.state.role_id)
 
         const onProfileIcon = () => {
             this.props.history.push({

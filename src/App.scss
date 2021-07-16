@@ -6,25 +6,30 @@
   margin: 2em;
 }
 
+.App-logo-container {
+  text-align: center;
+  margin: 5em 0 2em 0;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+// @media (prefers-reduced-motion: no-preference) {
+//   .App-logo {
+//     animation: App-logo-spin infinite 20s linear;
+//   }
+// }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+// @keyframes App-logo-spin {
+//   from {
+//     transform: rotate(0deg);
+//   }
+//   to {
+//     transform: rotate(360deg);
+//   }
+// }
 
 .Box-container {
   margin-left: -2em;
@@ -48,6 +53,7 @@
     p {
       color: $secondary-color;
       text-decoration: underline;
+      cursor: pointer;
     }
   }
 }
