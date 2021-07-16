@@ -1,6 +1,7 @@
-import { POST, GET } from './api'
+import { POST, GET, ip } from './api'
 
 export{
     POST,
-    GET
+    GET,
+    ip
 }
