@@ -7,6 +7,7 @@ export default class Dashboard extends Component {
         super(props)
         this.state = {
             role_id: this.props.location.state.role_id,
+            profile: this.props.location.state.profile,
             unapprovedArr: [
                 { title: "วิชา 340000", status: "สถานะ: รอครูประจำวิชาอนุมัติ" },
                 { title: "วิชา 341000", status: "สถานะ: รอครูประจำวิชาอนุมัติ" },
@@ -18,13 +19,11 @@ export default class Dashboard extends Component {
     }
 
     render() {
-
-        let { role_id, unapprovedArr, approvedArr } = this.state
-
+        let { role_id, profile, unapprovedArr, approvedArr } = this.state
         const onProfileIcon = () => {
             this.props.history.push({
                 pathname: '/profile',
-                state: { role_id: role_id, id: "000001" }
+                state: { role_id: role_id, profile: profile }
             })
         }
 
@@ -58,12 +57,12 @@ export default class Dashboard extends Component {
                 <>
                     <h3 className="primary_paragraph">คำขอที่ยังไม่อนุมัติ</h3>
                     {unapprovedArr.map((list, i) => (
-                        <BoxContainer type='teacher' title={list.title} status={list.status} style="unapproved" />
+                        <BoxContainer key={i} type='teacher' title={list.title} status={list.status} style="unapproved" onClick={() => onAdd()} />
                     ))}
 
                     <h3 className="primary_paragraph">คำขอที่อนุมัติสำเร็จ</h3>
                     {approvedArr.map((list, i) => (
-                        <BoxContainer type='teacher' title={list.title} status={list.status} style="approved" />
+                        <BoxContainer key={i} type='teacher' title={list.title} status={list.status} style="approved" />
                     ))}
                 </>
             )

@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 
 export default class BoxContainer extends Component {
     render() {
-        let { type, title, status, style } = this.props
+        let { type, title, status, style, onClick} = this.props
         switch (type) {
             case "teacher":
                 return (
@@ -11,7 +11,7 @@ export default class BoxContainer extends Component {
                     <div className="p-4">
                         <strong>{title}</strong>
                         <p>{status}</p>
-                        <Button>sssss</Button>
+                        { style === "unapproved" && <Button variant='warning' onClick={onClick}>จัดการใบลา</Button>}
                     </div>
                 </div>
                 )

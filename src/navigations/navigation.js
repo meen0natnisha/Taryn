@@ -45,7 +45,7 @@ export default class NavigationRouter extends Component {
                   exact
                 />
                 <PrivateRoute component={Dashboard} path={`/dashboard`} authed={authen} exact />
-                <PrivateRoute component={Profile} path={`/profile/role`} authed={authen} exact />
+                <PrivateRoute component={Profile} path={`/profile`} authed={authen} exact />
                 <PrivateRoute component={Add} path={`/add`} authed={authen} exact />
                 <PrivateRoute component={ConfrimToSubmit} path={`/confirm`} authed={authen} exact />
                 

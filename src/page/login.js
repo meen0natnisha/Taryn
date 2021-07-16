@@ -18,11 +18,11 @@ export default class Login extends Component {
         const onLogin = async () => {
             try {
                 let res = await POST("/authen/login", { user_no: user_no, id_card: id_card })
+                console.log("res", res)
                 this.props.history.push({
                     pathname: '/dashboard',
-                    state: { role_id: res.role_id }
+                    state: { role_id: res.role_id, profile: res }
                 })
-                // window.location.assign('/dashboard')
             } catch (err) {
                 swal({
                     title: "ผิดพลาด",

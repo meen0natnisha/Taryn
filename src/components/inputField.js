@@ -5,13 +5,13 @@ import SignatureCanvas from 'react-signature-canvas'
 
 export default class InputField extends Component {
     render() {
-        let { type, label, placeholder, name, value, onChange, options, textInputType } = this.props
+        let { type, label, placeholder, name, value, onChange, options, textInputType, disabled, required } = this.props
         switch (type) {
             case "date":
                 return (
                     <Form.Group>
                         <Form.Label><p className="primary_paragraph">{label}*</p></Form.Label>
-                        <DatePicker placeholderText={placeholder} value={value} onChange={onChange} required />
+                        <DatePicker placeholderText={placeholder} value={value} onChange={onChange} required disabled={disabled} />
                     </Form.Group>
                 )
             case "select":
@@ -33,7 +33,7 @@ export default class InputField extends Component {
                             placeholder={placeholder}
                             style={{ height: '100px' }}
                             onChange={onChange}
-                            required
+                            required={required}
                         />
                     </Form.Group>
                 )
@@ -59,7 +59,7 @@ export default class InputField extends Component {
             default: return (
                 <Form.Group>
                     <Form.Label><p className="primary_paragraph">{label}*</p></Form.Label>
-                    <Form.Control type={textInputType ? textInputType : ""} onChange={onChange} name={name} required value={value} placeholder={placeholder} />
+                    <Form.Control type={textInputType ? textInputType : ""} onChange={onChange} name={name} required value={value} placeholder={placeholder} disabled={disabled} />
                 </Form.Group>
             )
         }
