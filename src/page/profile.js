@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import { InputField } from '../components'
+import { POST } from '../api'
 
 export default class Profile extends Component {
     constructor(props) {
@@ -16,6 +17,11 @@ export default class Profile extends Component {
         let { role_id, profile } = this.state
         const onGoBack = () => {
             this.props.history.goBack()
+        }
+        const onLogout = () => {
+            this.props.history.push({
+                pathname: '/login',
+            })
         }
         const renderStudentField = () => {
             return (
@@ -67,6 +73,7 @@ export default class Profile extends Component {
                     ? renderStudentField()
                     : renderTeacherField()
                 }
+                <Button variant='warning' onClick={() => onLogout()}>ออกจากระบบ</Button>
             </div>
         )
     }
