@@ -1,28 +1,33 @@
 import React, { Component } from 'react'
 import { Row, Col, Form, Button } from 'react-bootstrap'
 import { InputField } from '../components'
-import { POST } from '../api'
+import { GET } from '../api'
 
 export default class Profile extends Component {
     constructor(props) {
         super(props)
         this.state = {
             role_id: "",
-            profile: ""
+            profile: {}
+        }
+    }
+
+    checkAuth = async () => {
+        try {
+            let profile = await GET('/authen/check')
+            this.setState({ profile })
+        } catch (err) {
+            console.log(err)
         }
     }
 
     componentDidMount = () => {
-        let { role_id, profile } = this.state
+        let { role_id } = this.state
+        this.checkAuth()
         if (this.props.location.state) {
             role_id = this.props.location.state.role_id
-            profile = this.props.location.state.profile
-            // if (role_id != 7) {
-            //     leave["leave_id"] = this.props.location.state.leave_id
-            //     this.setState({ leave })
-            // }
         }
-        this.setState({ role_id, profile })
+        this.setState({ role_id })
     }
 
 
@@ -31,13 +36,17 @@ export default class Profile extends Component {
         const onGoBack = () => {
             this.props.history.goBack()
         }
-        const onLogout = () => {
-            this.props.history.push({
-                pathname: '/login',
-            })
+        const onLogout = async () => {
+            try {
+                await GET('/authen/logout')
+                this.props.history.push({
+                    pathname: '/login',
+                })
+            } catch (err) {
+                console.log(err)
+            }
         }
         const renderStudentField = () => {
-            console.log(profile)
             return (
                 <>
                     <Form>
@@ -51,7 +60,7 @@ export default class Profile extends Component {
                         </Row>
                         <Row><Col><InputField label='ชั้นเรียน' placeholder='กรอกชั้นเรียน' value={profile?.class} disabled={true} /></Col></Row>
                         <Row>
-                            <Col xs={6}><InputField label='ที่อยู่บ้านเลขที่' placeholder='ที่อยู่บ้านเลขที่' value={profile?.dome} disabled={true} value={profile?.adress} disabled={true}   /></Col>
+                            <Col xs={6}><InputField label='ที่อยู่บ้านเลขที่' placeholder='ที่อยู่บ้านเลขที่' value={profile?.dome} disabled={true} value={profile?.adress} disabled={true} /></Col>
                             <Col xs={6}><InputField label='หมู่' placeholder='กรอกหมู่' value={profile?.moo} disabled={true} /></Col>
                         </Row>
                         <Row><Col><InputField label='ถนน' placeholder='ถนน' value={profile?.road} disabled={true} /></Col></Row>
@@ -59,9 +68,7 @@ export default class Profile extends Component {
                         <Row><Col><InputField label='อำเภอ' placeholder='อำเภอ' value={profile?.district} disabled={true} /></Col></Row>
                         <Row><Col><InputField label='ตำบล' placeholder='ตำบล' value={profile?.sub_district} disabled={true} /></Col></Row>
                         <Row><Col><InputField label='ไปรษณีย์' placeholder='ไปรษณีย์' value={profile?.zipcode} disabled={true} /></Col></Row>
-                        <Row><Col><InputField label='โทรศัพท์' placeholder='ไปรษณีย์' value={profile?.phone} disabled={true} /></Col></Row>
-                        <Row><Col><InputField label='โทรสาร' placeholder='ไปรษณีย์' value={profile?.fax} disabled={true} /></Col></Row>
-
+                        <Row><Col><InputField label='โทรศัพท์' placeholder='โทรศัพท์' value={profile?.phone} disabled={true} /></Col></Row>
                     </Form>
                 </>
             )

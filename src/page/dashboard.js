@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import { BoxContainer } from '../components'
-import { GET, POST } from '../api'
+import { GET, POST, ip } from '../api'
+import axios from 'axios'
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -11,10 +12,13 @@ export default class Dashboard extends Component {
             profile: this.props.location.state.profile,
             unapprovedArr: [],
             approvedArr: [],
+            loading: true,
         }
     }
+
     fetchData = async () => {
-        let unApp 
+        let unApp
+        let app
         try {
             if (this.state.role_id != 7) {
                 let data = await POST('/leave/to_app')
@@ -22,11 +26,13 @@ export default class Dashboard extends Component {
             } else {
                 let res = await GET('/leave/my')
                 let data = res.filter((e) => e.status === "รออนุมัติ")
+                let completeData = res.filter((e) => e.status === "อนุมัติ")
                 unApp = data
+                app = completeData
             }
-            console.log(unApp)
             this.setState({
-                unapprovedArr: unApp
+                unapprovedArr: unApp,
+                approvedArr: app
             })
         } catch (err) {
             console.log(err)
@@ -35,11 +41,10 @@ export default class Dashboard extends Component {
 
     componentDidMount = () => {
         this.fetchData()
-
     }
 
     render() {
-        let { role_id, profile, unapprovedArr, approvedArr } = this.state
+        let { role_id, profile, unapprovedArr, approvedArr, loading } = this.state
 
         const onProfileIcon = () => {
             this.props.history.push({
@@ -62,6 +67,27 @@ export default class Dashboard extends Component {
             })
         }
 
+        const handlePDF = async (leave_id) => {
+            console.log("leave_id ", leave_id)
+            await axios.post(`${ip}/leave/create_pdf`,
+                { leave_id: leave_id },
+                {
+                    responseType: "blob",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                }
+            ).then(async (res) => {
+                const pdfBlob = new Blob([res.data], {
+                    type: "application/pdf",
+                });
+                const fileURL = URL.createObjectURL(pdfBlob);
+                this.setState({ loading: false })
+                window.open(fileURL)
+            })
+        }
+
         const renderStudentField = () => {
             return (
                 <>
@@ -73,9 +99,9 @@ export default class Dashboard extends Component {
                         : <p className="secondary_paragraph">ไม่พบคำร้อง</p>}
 
                     <h3 className="primary_paragraph">คำขอที่อนุมัติสำเร็จ</h3>
-                    {approvedArr.length != 0 ?
-                        approvedArr.map((list, i) => (
-                            <BoxContainer key={i} title={list.title} status={list.status} style="approved" />
+                    {approvedArr.length != 0
+                        ? approvedArr.map((list, i) => (
+                            < BoxContainer key={i} title={`วิชา${list.class_code}`} status={list.status} style="approved" onClick={() => handlePDF(list.leave_id)} />
                         ))
                         : <p className="secondary_paragraph">ไม่พบคำร้อง</p>}
 
@@ -88,9 +114,11 @@ export default class Dashboard extends Component {
             return (
                 <>
                     <h3 className="primary_paragraph">คำขอที่ยังไม่อนุมัติ</h3>
-                    {unapprovedArr.map((list, i) => (
-                        <BoxContainer key={i} type='teacher' title={`วิชา${list.class_code}`} status={list.status} style="unapproved" onClick={() => onApprove(list.leave_id) } />
-                    ))}
+                    {unapprovedArr.length != 0 ?
+                        unapprovedArr.map((list, i) => (
+                            <BoxContainer key={i} type='teacher' title={`วิชา${list.class_code}`} status={list.status} style="unapproved" onClick={() => onApprove(list.leave_id)} />
+                        ))
+                        : <p className="secondary_paragraph">ไม่พบคำร้อง</p>}
 
                     {/* <h3 className="primary_paragraph">คำขอที่อนุมัติสำเร็จ</h3>
                     {approvedArr.map((list, i) => (

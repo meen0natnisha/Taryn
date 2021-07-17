@@ -49,6 +49,17 @@ export default class InputField extends Component {
                         <Form.Control onChange={onChange} name={name} placeholder={placeholder} />
                     </Form.Group>
                 )
+            case "check-5": 
+            return (
+                <Form.Group>
+                    <Form.Label><p className="primary_paragraph">{label}*</p></Form.Label>
+                    <div>
+                        {options.map((option, i) =>
+                            <Form.Check key={i} inline type={'checkbox'} name={name} value={option} label={option} checked={value === option} onChange={onChange} />
+                        )}
+                    </div>
+                </Form.Group>
+            )                
             case "sign":
                 return (
                     <Form.Group>

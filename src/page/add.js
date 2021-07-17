@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { InputField } from '../components'
-import { Col, Row, Button, Form } from 'react-bootstrap'
+import { Col, Row, Button, Form, Spinner } from 'react-bootstrap'
 import moment from 'moment-timezone'
 import swal from 'sweetalert';
-import { POST } from '../api';
+import { POST, ip } from '../api';
+import axios from 'axios';
 
 export default class Add extends Component {
     constructor(props) {
@@ -15,7 +16,33 @@ export default class Add extends Component {
             validated: false,
             date_start: "",
             date_end: "",
+            leave_id: "",
+            loading: true,
+            fileURL: "",
+            consider: "",
         }
+    }
+
+    handlePDF = async () => {
+        let { leave } = this.state
+
+        await axios.post(`${ip}/leave/create_pdf`,
+            { leave_id: leave.leave_id },
+            {
+                responseType: "blob",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+            }
+        ).then(async (res) => {
+            const pdfBlob = new Blob([res.data], {
+                type: "application/pdf",
+            });
+            const fileURL = URL.createObjectURL(pdfBlob);
+            this.setState({ fileURL })
+            this.setState({ loading: false })
+        })
     }
 
     componentDidMount = () => {
@@ -26,6 +53,9 @@ export default class Add extends Component {
             if (role_id != 7) {
                 leave["leave_id"] = this.props.location.state.leave_id
                 this.setState({ leave })
+                if (this.props.location.state.leave_id) {
+                    this.handlePDF()
+                }
             }
         }
         this.setState({ role_id, profile })
@@ -33,11 +63,21 @@ export default class Add extends Component {
 
     render() {
         let { userSigPad, parentSigPad, appSigPad } = {}
-        let { leave, role_id, profile, validated, date_start, date_end } = this.state
+        let { leave, role_id, leave_id, validated, date_start, date_end, profile, loading, fileURL, consider } = this.state
 
         const onChangeInput = ({ target: { name, value } }) => {
             let { leave } = this.state
             leave[name] = value
+            if (name === "user5_isapp") {
+                if (value === "อนุญาต") {
+                    leave[name] = true
+                    consider = "อนุญาต"
+                } else if(value === "ไม่อนุญาต") {
+                    leave[name] = false
+                    consider = "ไม่อนุญาต"
+                }
+                this.setState({ consider })
+            }
             this.setState({ leave })
         }
 
@@ -74,9 +114,10 @@ export default class Add extends Component {
         const onPostLeave = async () => {
             try {
                 let leave_id = await POST('/leave/add', leave)
-                leave["leave_id"] = leave_id
-                this.setState({
-                    leave
+                this.setState({ validated: true })
+                this.props.history.push({
+                    pathname: '/confirm',
+                    state: { role_id: role_id, leave_id: leave_id, profile: profile },
                 })
             } catch (err) {
                 console.log(err)
@@ -91,15 +132,14 @@ export default class Add extends Component {
             }
         }
 
+        const onOpenPDF = () => {
+            window.open(fileURL);
+        }
+
         const handleStudentSubmit = () => {
             if (leave.class_code && userSigPad && parentSigPad) {
                 onSign()
                 onPostLeave()
-                this.setState({ validated: true })
-                this.props.history.push({
-                    pathname: '/confirm',
-                    state: { role_id: role_id, leave_id: leave },
-                })
             } else {
                 swal({
                     title: "ผิดพลาด",
@@ -116,7 +156,7 @@ export default class Add extends Component {
                 this.setState({ validated: true })
                 this.props.history.push({
                     pathname: '/confirm',
-                    state: { role_id: role_id }
+                    state: { role_id: role_id, leave_id: leave.leave_id, profile: profile }
                 })
             }
         }
@@ -145,12 +185,16 @@ export default class Add extends Component {
             return (
                 <>
                     <h3 className="primary_paragraph">ข้อมูลใบลา</h3>
+                    {this.state.loading
+                        ? <Row><Button variant='primary' disabled onClick={() => onOpenPDF()}><Spinner animation="grow" variant="light" size="sm" /> กดเพื่อดาวน์โหลด หรือดูเอกสาร</Button></Row>
+                        : <Row><Button variant='primary' onClick={() => onOpenPDF()}>กดเพื่อดาวน์โหลด หรือดูเอกสาร</Button></Row>}
                     <h3 className="primary_paragraph">จัดการใบลา</h3>
                     <Form validated={validated} >
+                        {role_id === 5 && <Row><Col><InputField type='check-5' label='พิจารณา' placeholder='อื่นๆ ระบุ' name='user5_isapp' value={consider} onChange={onChangeInput} options={['อนุญาต', 'ไม่อนุญาต']} /></Col></Row>}
                         <Row><Col><InputField type='textarea' label='เหตุผล' placeholder='กรอกเหตุผล' name='note' value={leave.note} onChange={(value) => onChangeInputArea("note", value)} /></Col></Row>
                         <Row><Col><InputField type='date' label='วันที่ดำเนินการ' name='date' value={moment(Date()).format("DD-MM-yyyy")} disabled={true} /></Col></Row>
                         <Row><Col><InputField type='sign' label='ลายเซ็น' onChange={(ref) => { appSigPad = ref }} /></Col></Row>
-                        <Row><Col xs={12}><Button variant="primary" onClick={() => handleApproved()}>เพิ่มใบลา</Button></Col></Row>
+                        <Row><Col xs={12}><Button variant="primary" onClick={() => handleApproved()}>ยืนยัน</Button></Col></Row>
                     </Form>
                 </>
             )

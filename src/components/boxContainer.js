@@ -24,7 +24,7 @@ export default class BoxContainer extends Component {
                         <div className="p-4">
                             <strong>{title}</strong>
                             {style === "approved"
-                                ? <p onClick={() => console.log("pdf")}>ดาวน์โหลดเอกสารใบลา</p>
+                                ? <p onClick={onClick}>ดาวน์โหลดเอกสารใบลา</p>
                                 : <p>{status}</p>
                             }
                         </div>
